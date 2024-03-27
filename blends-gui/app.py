@@ -175,7 +175,7 @@ def main():
     st.header("What do you want to create?")
     question = st.text_area("", value = "")
 
-    with st.spinner('Wait...'):
+    with st.spinner('Generating results...'):
         res_str = query_ai(question, BLEND_EXAMPLE, '')
 
     st.header("Answer")
@@ -202,8 +202,9 @@ def main():
     st.graphviz_chart(res_graph)
 
     st.header("Download")
-    df = get_samples(res_blend, nsamples=1000, verbose=True)
-    st.dataframe(df)
+    with st.spinner('Generating trial...'):
+        df = get_samples(res_blend, nsamples=1000, verbose=True)
+        st.dataframe(df)
 
 
     # Button to clear the list - TODO
