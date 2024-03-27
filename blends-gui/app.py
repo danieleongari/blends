@@ -4,6 +4,7 @@ except ImportError:
     import sys
     sys.path.append('../')    
     from blends.viz import get_graph
+    from blends.base import dict_to_blend
 
 from dotenv import load_dotenv, find_dotenv #python-dotenv
 import openai
@@ -15,6 +16,7 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 
 import os
+import re
 
 import streamlit as st
 import pandas as pd
@@ -22,7 +24,7 @@ import pandas as pd
 import logging
 
 # Configure logging
-logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
+logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.DEBUG)
 
 @st.cache_resource
 def start_api():
@@ -173,18 +175,40 @@ def main():
     question = st.text_area("", value = "")
 
     with st.spinner('Wait...'):
-        res = BLEND_EXAMPLE#query_ai(question, BLEND_EXAMPLE, '')
+        res_str = query_ai(question, BLEND_EXAMPLE, '')
 
-    # I want to create a formulation of two components A and B, where the amount of A must be between 
-    # 0.1 and 0.7 and the amount of B must be between 0.3 and 0.5
+    #I want to create a formulation of two components A and B, where the amount of A must be between 
+    #0.1 and 0.7 and the amount of B must be between 0.3 and 0.5
 
     st.header("Answer")
-    st.info(res)
+    st.info(res_str)
 
-    # Button to clear the list
-    if st.button("Clear chat history"):
-        st.session_state.history.clear()
-        st.write("Chat history cleared")
+    logging.debug(f'Result: {res_str}')
+
+    # Define the pattern to match
+    res_pattern = r'```json\s*({[\s\S]*?})\s*```'
+    # Use re.search to find the first occurrence of the pattern in the string
+    match = re.search(res_pattern, res_str)
+
+    # If a match is found, extract the captured group
+    if match:
+        res_str = match.group(1)
+    else:
+        logging.error("No match found")
+
+    res_dict = eval(res_str)
+
+    st.header("Visualize")
+    res_blend = dict_to_blend(res_dict)
+    res_graph = get_graph(res_blend)
+    st.graphviz_chart(res_graph)
+
+    st.header("Download")
+
+    # Button to clear the list - TODO
+    #if st.button("Clear chat history"):
+    #    st.session_state.history.clear()
+    #    st.write("Chat history cleared")
 
 if __name__ == "__main__":
     main()
