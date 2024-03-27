@@ -21,12 +21,13 @@ class Blend:
     can only have Components as children (i.e., another Formulation).
     """
 
-    def __init__(self, name, children, description=None, qmin=0.0, qmax=1.0, cmax=None):
+    def __init__(self, name, children, description=None, qmin=0.0, qmax=1.0, qmethod="relative", cmax=None):
         self.name = name
         self.description = description
         self.children = children
         self.qmin = qmin
         self.qmax = qmax
+        self.qmethod = qmethod
         self.cmax = len(self.children) if cmax is None else cmax
 
 
