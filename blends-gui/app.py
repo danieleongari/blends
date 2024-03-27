@@ -5,6 +5,7 @@ except ImportError:
     sys.path.append('../')    
     from blends.viz import get_graph
     from blends.base import dict_to_blend
+    from blends.sample import get_samples
 
 from dotenv import load_dotenv, find_dotenv #python-dotenv
 import openai
@@ -201,6 +202,16 @@ def main():
     st.graphviz_chart(res_graph)
 
     st.header("Download")
+    df = get_samples(res_blend, nsamples=1000, verbose=True)
+    st.download_button(
+        "Press to Download",
+        df.to_csv(index=False).encode('utf-8'),
+        "file.csv",
+        "text/csv",
+        key='download-csv'
+    )    
+    st.table(df)
+
 
     # Button to clear the list - TODO
     #if st.button("Clear chat history"):
