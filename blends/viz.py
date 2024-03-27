@@ -1,3 +1,8 @@
+"""
+Functions to visualize Blends and samples.
+"""
+
+
 from graphviz import Digraph
 from .base import Component  
 
