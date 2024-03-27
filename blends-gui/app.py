@@ -162,40 +162,28 @@ def main():
 
     # Initialize session_state if not exists
     logging.info(f'session: {st.session_state.keys()}')
-    if 'res' not in st.session_state:
-        st.session_state.res = []
+    if 'history' not in st.session_state:
+        st.session_state.history = []
         logging.info(f'chat history initialized')
-    logging.info(f"chat history length: {len(st.session_state.res)}")
+    logging.info(st.session_state)
+    logging.info(f"chat history length: {len(st.session_state.history)}")
 
     # ----- Write questions separated by a new line -----
     st.header("What do you want to create?")
     question = st.text_area("", value = "")
 
-    res = query_ai(question, BLEND_EXAMPLE, '')
+    with st.spinner('Wait...'):
+        res = BLEND_EXAMPLE#query_ai(question, BLEND_EXAMPLE, '')
 
     # I want to create a formulation of two components A and B, where the amount of A must be between 
     # 0.1 and 0.7 and the amount of B must be between 0.3 and 0.5
 
+    st.header("Answer")
     st.info(res)
-
-    if len(st.session_state.res)>0:
-        st.header("Answer")
-        print(res)
-    #    anss = st.session_state.res[-1].split('\n\n')
-    #    for ans in anss:
-    #        print('ans:',ans)
-            #if len(ans)>4:
-            #    if is_valid_table(ans): # this does not work
-            #        logging.debug(f"This is a table. Displaying it")
-            #        df = parse_text_to_dataframe(ans)
-            #        # Display the DataFrame as a table
-            #        st.table(df)
-            #    else:
-            #        st.write(f"{ans}")
 
     # Button to clear the list
     if st.button("Clear chat history"):
-        st.session_state.res.clear()
+        st.session_state.history.clear()
         st.write("Chat history cleared")
 
 if __name__ == "__main__":
