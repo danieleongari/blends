@@ -203,14 +203,7 @@ def main():
 
     st.header("Download")
     df = get_samples(res_blend, nsamples=1000, verbose=True)
-    st.download_button(
-        "Press to Download",
-        df.to_csv(index=False).encode('utf-8'),
-        "file.csv",
-        "text/csv",
-        key='download-csv'
-    )    
-    st.table(df)
+    st.dataframe(df)
 
 
     # Button to clear the list - TODO
