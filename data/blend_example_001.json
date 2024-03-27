@@ -1,0 +1,84 @@
+{
+    "name": "myRootBlend",
+    "description": "an example of a Blend",
+    "qmin": 1.0,
+    "qmax": 1.0,
+    "children": [
+        {
+            "name": "Solvent",
+            "description": "Choose only one of the 3 following solvents",
+            "qmin": 0.2,
+            "qmax": 0.3,
+            "cmax": 1,
+            "children": [
+                {
+                    "name": "Solvent-1",
+                    "description": "xxx"
+                },
+                {
+                    "name": "Solvent-2",
+                    "description": "yyy"
+                },
+                {
+                    "name": "Solvent-3",
+                    "description": "zzz"
+                }
+            ]
+        },
+        {
+            "name": "Blend-A",
+            "description": "Mix the following A components",
+            "qmin": 0.4,
+            "qmax": 0.7,
+            "children": [
+                {
+                    "name": "Comp-A1",
+                    "description": "xxx"
+                },
+                {
+                    "name": "Comp-A2",
+                    "description": "yyy"
+                },
+                {
+                    "name": "Comp-A3",
+                    "description": "zzz"
+                }
+            ]
+        },
+        {
+            "name": "Component-B",
+            "description": "zzz",
+            "qmin": 0.1,
+            "qmax": 0.3
+        },
+        {
+            "name": "Component-C",
+            "description": "zzz",
+            "qmin": 0.0,
+            "qmax": 0.2,
+            "cmax": 1,
+            "children": [
+                {
+                    "name": "Comp-C1",
+                    "description": "xxx",
+                    "children": [   
+                        {
+                            "name": "Comp-C1-1",
+                            "description": "xxx"
+                        },
+                        {
+                            "name": "Comp-C1-2",
+                            "description": "yyy"
+                        }
+                    ]
+                },
+                {
+                    "name": "Comp-C2",
+                    "description": "yyy"
+                }
+            ]
+        }        
+
+    ]
+
+}
