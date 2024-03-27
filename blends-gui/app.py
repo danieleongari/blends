@@ -177,9 +177,6 @@ def main():
     with st.spinner('Wait...'):
         res_str = query_ai(question, BLEND_EXAMPLE, '')
 
-    #I want to create a formulation of two components A and B, where the amount of A must be between 
-    #0.1 and 0.7 and the amount of B must be between 0.3 and 0.5
-
     st.header("Answer")
     st.info(res_str)
 
