@@ -1,9 +1,9 @@
-#try:
-#    from blends import Blend
-#except ImportError:
-#    import sys
-#    sys.path.append('../')    
-#    from blends import Blend
+try:
+    from blends import Blend
+except ImportError:
+    import sys
+    sys.path.append('../')    
+    from blends.viz import get_graph
 
 from dotenv import load_dotenv, find_dotenv #python-dotenv
 import openai
