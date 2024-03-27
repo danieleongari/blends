@@ -1,0 +1,15 @@
+.ipynb_checkpoints
+.ruff_cache
+*.py[cod]
+*.swp
+*.egg-info/
+*.DS_Store
+*.pkl
+doe.csv
+adex_webapp/.ipynb_checkpoints
+adex_webapp/callbacks/__pycache__
+cache/
+logs/
+
+poetry.lock
+pyproject.toml
