@@ -11,6 +11,7 @@ from dotenv import load_dotenv, find_dotenv #python-dotenv
 import openai
 
 from langchain.chains.llm import LLMChain
+from langchain.chains import ConversationChain
 from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.callbacks.manager import CallbackManager  
@@ -26,38 +27,6 @@ import logging
 
 # Configure logging
 logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.DEBUG)
-
-@st.cache_resource
-def start_api():
-    _ = load_dotenv(find_dotenv()) # needs .env with openai passkey
-    openai.api_key = os.getenv('OPENAI_API_KEY')
-    logging.info(f"api_key acquired and cached")
-
-#If you should need to return a table, the format must be similar to
-#this example```\n\nIndex\tColA\tColB\nColC\n1\t1.2\t1.5\t1.8\n2\t1.3\t1.8\t1.9\n\n```."
-
-PROMPT_TEMPLATE = """
-You are an expert research lab assistant. If provided, use the chat history to refine your answers.
-Your task is to generate a dictionary that contains the hierarchical structure for specifying blends of components
-the user is looking to create. This is an example:
-```
-{example}
-```
-This is how you must interpret the dictionary.
-You start from the root and assign a "name" to the blend of the component and a brief "description".
-The blend can have one or more "children" that can be recursive. 
-These are the components of the blend that make up the blend. 
-Each child component can have its own name, description, and quantity constraints.
-This is the question:
-```
-{question}
-```
-This is the chat history:
-```
-{history}
-``` 
-Answer:
-""".strip()
 
 BLEND_EXAMPLE = {
     "name": "myRootBlend",
@@ -144,13 +113,43 @@ BLEND_EXAMPLE = {
 
 }
 
-def query_ai(question, example, history=''):
+PROMPT_TEMPLATE = """
+You are an expert research lab assistant. 
+Your task is to generate a dictionary that contains a recursive hierarchical structure for specifying blends of components. 
+You must return the dictionary as a string within ```json ```.
+This is an example:
+```
+{example}
+```
+This is how you must interpret the dictionary.
+You start from the root and assign a "name" to the blend and a brief "description".
+The blend can have one or more "children". 
+These are the components of the blend that make up the blend. 
+Each child component can have its own name, description, and quantity constraints.
+You can use "cmax" to specify how many children you can choose.
+This is the previous conversation:
+```
+{history}
+```
+This is the question:
+```
+{question}
+```
+Answer:
+""".strip()
+
+
+@st.cache_resource
+def start_api():
+    _ = load_dotenv(find_dotenv()) # needs .env with openai passkey
+    openai.api_key = os.getenv('OPENAI_API_KEY')
+    logging.info(f"api_key acquired and cached")
+
+def query_ai(question, example, history):
 
     model = ChatOpenAI(temperature=0, model='gpt-4-0125-preview')
-      
     prompt = PromptTemplate(input_variables=['question', 'example', 'history'], template=PROMPT_TEMPLATE)
-    memory = ConversationBufferWindowMemory(memory_key='history', input_key='question', k=6)
-    chain = LLMChain(llm=model, memory=memory, prompt=prompt, verbose=True)
+    chain = LLMChain(llm=model, prompt=prompt, verbose=True)
     logging.debug(f"prompt: {chain.prompt.template}")
 
     return chain.run(question=question, example=example, history=history)
@@ -163,53 +162,60 @@ def main():
     st.title("BlenDS")
     st.write("An intuitive specification of the design space for blends of components")
 
-    # Initialize session_state if not exists
+    # Initialize session_state 
     logging.info(f'session: {st.session_state.keys()}')
     if 'history' not in st.session_state:
         st.session_state.history = []
         logging.info(f'chat history initialized')
-    logging.info(st.session_state)
+    #logging.info(st.session_state)
     logging.info(f"chat history length: {len(st.session_state.history)}")
 
-    # ----- Write questions separated by a new line -----
     st.header("What do you want to create?")
     question = st.text_area("", value = "")
+    logging.debug(f'Question: {question}')
 
-    with st.spinner('Wait...'):
-        res_str = query_ai(question, BLEND_EXAMPLE, '')
+    if question!='':
+        with st.spinner('Generating results...'):
+            #res_str = f'```json\n{BLEND_EXAMPLE}\n```'
+            res_str = query_ai(question, BLEND_EXAMPLE, ' '.join(st.session_state.history)[-3:])
+            st.session_state.history.append(f'HUMAN: {question}; AI: {res_str}.')
 
-    st.header("Answer")
-    st.info(res_str)
+            st.header("Answer")
+            st.info(res_str)
 
-    logging.debug(f'Result: {res_str}')
+            logging.debug(f'Result: {res_str}')
 
-    # Define the pattern to match
-    res_pattern = r'```json\s*({[\s\S]*?})\s*```'
-    # Use re.search to find the first occurrence of the pattern in the string
-    match = re.search(res_pattern, res_str)
+            # Define the pattern to match
+            res_pattern = r'```json\s*({[\s\S]*?})\s*```'
+            # Use re.search to find the first occurrence of the pattern in the string
+            match = re.search(res_pattern, res_str)
 
-    # If a match is found, extract the captured group
-    if match:
-        res_str = match.group(1)
-    else:
-        logging.error("No match found")
+            # If a match is found, extract the captured group
+            if match:
+                res_str = match.group(1)
+            else:
+                logging.error("No match found")
 
-    res_dict = eval(res_str)
+            res_dict = eval(res_str)
 
-    st.header("Visualize")
-    res_blend = dict_to_blend(res_dict)
-    res_graph = get_graph(res_blend)
-    st.graphviz_chart(res_graph)
+        with st.spinner('Generating graph...'):
+            st.header("Visualize")
+            res_blend = dict_to_blend(res_dict)
+            res_graph = get_graph(res_blend)
+            st.graphviz_chart(res_graph)
 
-    st.header("Download")
-    df = get_samples(res_blend, nsamples=1000, verbose=True)
-    st.dataframe(df)
+        st.header("Download")
+        with st.spinner('Generating trial...'):
+            df = get_samples(res_blend, nsamples=1000, verbose=True)
+            st.dataframe(df)
 
+    st.header("Chat History")
+    st.info(' '.join(st.session_state.history)[-3:])
 
-    # Button to clear the list - TODO
-    #if st.button("Clear chat history"):
-    #    st.session_state.history.clear()
-    #    st.write("Chat history cleared")
+    # Button to clear the history
+    if st.button("Clear chat history"):
+        st.session_state.history.clear()
+        st.write("Chat history cleared")
 
 if __name__ == "__main__":
     main()
