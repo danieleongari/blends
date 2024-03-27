@@ -1,0 +1,70 @@
+{
+    "name": "blend002",
+    "description": "Create a formulation with the 10-20% of resins, 20-30% of pigments, 10-15% of additives and 10-20% of additives. Use the following ingredients and constraints: Resin A, 10-30%; Resin B, 25-35%; Pigment A, 15-20%; Pigment B, 15-20%; Filler A 10-12%; Additive A 2-3%. You may choose one resin and 2 pigments",
+    "qmin": 1.0,
+    "qmax": 1.0,
+    "children": [
+      {
+        "name": "Resins",
+        "description": "Choose only one of the following resins, 10-20%",
+        "qmin": 0.1,
+        "qmax": 0.2,
+        "cmax": 1,
+        "children": [
+          {
+            "name": "Resin A",
+            "description": "Resin A component",
+            "qmin": 0.1,
+            "qmax": 0.3
+          },
+          {
+            "name": "Resin B",
+            "description": "Resin B component",
+            "qmin": 0.25,
+            "qmax": 0.35
+          }
+        ]
+      },
+      {
+        "name": "Pigments",
+        "description": "Choose 2 of the following pigments, 20-30%",
+        "qmin": 0.2,
+        "qmax": 0.3,
+        "cmax": 2,
+        "children": [
+          {
+            "name": "Pigment A",
+            "description": "Pigment A component",
+            "qmin": 0.15,
+            "qmax": 0.2
+          },
+          {
+            "name": "Pigment B",
+            "description": "Pigment B component",
+            "qmin": 0.15,
+            "qmax": 0.2
+          }
+        ]
+      },
+      {
+        "name": "Filler A",
+        "description": "Filler A component, 10-12%",
+        "qmin": 0.1,
+        "qmax": 0.12
+      },
+      {
+        "name": "Additives",
+        "description": "Additives component, 10-20%",
+        "qmin": 0.1,
+        "qmax": 0.2,
+        "children": [
+          {
+            "name": "Additive A",
+            "description": "Additive A component, 2-3%",
+            "qmin": 0.02,
+            "qmax": 0.03
+          }
+        ]
+      }
+    ]
+  }
