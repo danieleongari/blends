@@ -140,6 +140,7 @@ You can use "cmax" to specify how many children you can choose.
 Pay attention to "qmin", "qmax" and "cmax". 
 Children may not have "qmin" and "qmax" outside their parent's ones. Normalize accordingly.
 Also, "cmax" may not be greater than the number of available children. Resize accordingly.
+Default values for qmin, qmax and cmax when not provided directly are 0, 1, None, respectively.
 This is the previous conversation:
 ```
 {history}
@@ -173,7 +174,7 @@ def main():
 
     # ----- Header of the app -----
     st.title("BlenDS")
-    st.write("An intuitive specification of the design space for blends of components")
+    st.write("An intuitive planner for designing experiments with mixtures")
 
     # Initialize session_state 
     logging.info(f'session: {st.session_state.keys()}')
@@ -183,7 +184,7 @@ def main():
     #logging.info(st.session_state)
     logging.info(f"chat history length: {len(st.session_state.history)}")
 
-    st.header("What do you want to create?")
+    st.header("What would you like to mix?")
     question = st.text_area("", value = "")
     logging.debug(f'Question: {question}')
 
@@ -212,23 +213,25 @@ def main():
             res_dict = eval(res_str)
 
         with st.spinner('Generating graph...'):
-            st.header("Visualize")
+            st.header("Visualizer")
             res_blend = dict_to_blend(res_dict)
             res_graph = get_graph(res_blend)
             st.graphviz_chart(res_graph)
 
-        st.header("Download")
-        with st.spinner('Generating trial...'):
+        st.header("Design Plan")
+        with st.spinner('Generating trials...'):
             df = get_samples(res_blend, nsamples=1000, verbose=True)
             st.dataframe(df)
 
-    st.header("Chat History")
-    st.info(' '.join(st.session_state.history[-3:]))
+    #st.header("Chat History")
+    #st.info(' '.join(st.session_state.history[-3:]))
 
     # Button to clear the history
     if st.button("Clear chat history"):
         st.session_state.history.clear()
         st.write("Chat history cleared")
+
+    st.page_link("https://github.com/danieleongari/blends", label="GitHub Repo", icon=None)
 
 if __name__ == "__main__":
     main()
