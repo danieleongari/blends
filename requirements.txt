@@ -6,3 +6,5 @@ streamlit
 langchain
 python-dotenv
 openai
+scikit-learn
+plotly
