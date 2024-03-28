@@ -211,6 +211,7 @@ def main():
                 logging.error("No match found")
 
             res_dict = eval(res_str)
+            logging.debug(f'res_dict: {res_dict}')
 
         with st.spinner('Generating graph...'):
             st.header("Visualizer")
