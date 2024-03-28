@@ -11,9 +11,13 @@ conda install graphviz # WindowsOS only
 
 ## Run
 
-To run the streamlit app (activate environment):
+To run the streamlit app:
 
+```
+cd blends-gui
+# create a ".env" file with your OPENAI_API_KEY
 streamlit run app.py
+```
 
 ## Terminology
 
