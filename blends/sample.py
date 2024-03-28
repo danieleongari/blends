@@ -4,7 +4,7 @@ Functions to generate samples from the constraints of a Blend.
 
 import numpy as np
 import pandas as pd
-from .base import Blend, get_base_components
+from .base import Blend, get_base_components, get_all_blends
 
 #TODO: qmethod should be an attribute of the Blend object not an argument of the function,
 #      because the user needs to specify qmin and qmax coherently with the qmethod.
@@ -114,6 +114,13 @@ def generate_children_quantities(blend, qparent=None, quants=None, qmethod="abso
             del quants[child_name]
 
     return quants
+
+def join_blends_quantities_to_samples(rblend, df_samples) -> pd.DataFrame:
+    """
+    Add the quantities of each sub-blend to the samples DataFrame.
+    """
+    base_components = get_base_components(rblend)
+
 
 def add_prop_to_samples(rblend, df_samples, prop_name) -> pd.DataFrame:
     """

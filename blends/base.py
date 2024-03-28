@@ -75,6 +75,14 @@ def get_base_components(blend):
     else: # blend is a Component
         return [blend]
     
+def get_all_blends(blend, include_rblend=False):
+    if isinstance(blend, Blend):
+        blends = [blend] if include_rblend else []
+        for child in blend.children:
+            blends += get_all_blends(child, include_root=True)
+        return blends
+    else: # blend is a Component
+        return []
 
 def add_prop_to_blend(blend, prop_name, prop_dict):
     """Add a property to each Component in the Blend.
