@@ -1,6 +1,6 @@
 {
     "name": "myRootBlend",
-    "description": "an example of a Blend",
+    "description": "Choose one of 3 available solvents in an amount between 20%-30%, add a mixture of 3 components Comp-A1, ..., Comp-A3 in the amount between 40%-70%, add another component Comp-B in the amount between 10%-30%, add a final blend of either a mixture of 2 components Comp-C1-1, Comp-C1-2 or a component Comp-C2 in the amount of 0%-20%",
     "qmin": 1.0,
     "qmax": 1.0,
     "children": [
