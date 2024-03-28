@@ -127,6 +127,9 @@ The blend can have one or more "children".
 These are the components of the blend that make up the blend. 
 Each child component can have its own name, description, and quantity constraints.
 You can use "cmax" to specify how many children you can choose.
+Pay attention to "qmin", "qmax" and "cmax". 
+Children may not have "qmin" and "qmax" outside their parent's ones. Normalize accordingly.
+Also, "cmax" may not be greater than the number of available children. Resize accordingly.
 This is the previous conversation:
 ```
 {history}
@@ -177,7 +180,7 @@ def main():
     if question!='':
         with st.spinner('Generating results...'):
             #res_str = f'```json\n{BLEND_EXAMPLE}\n```'
-            res_str = query_ai(question, BLEND_EXAMPLE, ' '.join(st.session_state.history)[-3:])
+            res_str = query_ai(question, BLEND_EXAMPLE, ' '.join(st.session_state.history[-3:]))
             st.session_state.history.append(f'HUMAN: {question}; AI: {res_str}.')
 
             st.header("Answer")
@@ -210,7 +213,7 @@ def main():
             st.dataframe(df)
 
     st.header("Chat History")
-    st.info(' '.join(st.session_state.history)[-3:])
+    st.info(' '.join(st.session_state.history[-3:]))
 
     # Button to clear the history
     if st.button("Clear chat history"):
