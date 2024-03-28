@@ -2,6 +2,11 @@
 
 A framework for an intuitive specification of the design space for blends of components.
 
+Started as a project for the [AC Bayesian Optimization Hackathon](https://github.com/AC-BO-Hackathon) in March 2024.
+
+- poster
+- video
+
 ## Installation
 
 ```sh
@@ -13,7 +18,7 @@ conda install graphviz # WindowsOS only
 
 To run the streamlit app:
 
-```
+```sh
 cd blends-gui
 # create a ".env" file with your OPENAI_API_KEY
 streamlit run app.py
