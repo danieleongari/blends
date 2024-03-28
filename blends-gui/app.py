@@ -43,15 +43,24 @@ BLEND_EXAMPLE = {
             "children": [
                 {
                     "name": "Solvent-1",
-                    "description": "xxx"
+                    "description": "xxx",
+                    "props": {
+                        "price": 50.0
+                    }
                 },
                 {
                     "name": "Solvent-2",
-                    "description": "yyy"
+                    "description": "yyy",
+                    "props": {
+                        "price": 10.0
+                    }
                 },
                 {
                     "name": "Solvent-3",
-                    "description": "zzz"
+                    "description": "zzz",
+                    "props": {
+                        "price": 5.0
+                    }
                 }
             ]
         },
@@ -125,7 +134,8 @@ This is how you must interpret the dictionary.
 You start from the root and assign a "name" to the blend and a brief "description".
 The blend can have one or more "children". 
 These are the components of the blend that make up the blend. 
-Each child component can have its own name, description, and quantity constraints.
+Each child component can have its own name, description, quantity constraints and additional properties "props"
+such as "price".
 You can use "cmax" to specify how many children you can choose.
 Pay attention to "qmin", "qmax" and "cmax". 
 Children may not have "qmin" and "qmax" outside their parent's ones. Normalize accordingly.
