@@ -1,0 +1,67 @@
+{
+    "name": "FormulationABC",
+    "description": "A formulation with 3 components",
+    "qmin": 1.0,
+    "qmax": 1.0,
+    "children": [
+        {
+            "name": "A",
+            "description": "Choose A between 3 possibilities.",
+            "cmax": 1,
+            "children": [
+                {
+                    "name": "a1",
+                    "props": {
+                        "price": 10
+                    }
+                },
+                {
+                    "name": "a2",
+                    "props": {
+                        "price": 20
+                    }
+                }
+            ]
+        },
+        {
+            "name": "B",
+            "description": "B is a mixture of 3 components",
+            "qmin": 0.3,
+            "qmax": 0.7,
+            "children": [
+                {
+                    "name": "b1",
+                    "qmin": 0.2,
+                    "props": {
+                        "price": 100
+                    }
+
+                },
+                {
+                    "name": "b2",
+                    "qmin": 0.5,
+                    "props": {
+                        "price": 200
+                    }
+
+                },
+                {
+                    "name": "b3",
+                    "qmin": 0.2,
+                    "props": {
+                        "price": 200
+                    }
+
+                }
+            ]
+        },
+        {
+            "name": "Solvent",
+            "description": "This is the solvent: 10% minimum.",
+            "qmin": 0.1,
+            "props": {
+                "price": 1
+            }
+        }
+    ]
+}
