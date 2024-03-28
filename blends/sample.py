@@ -118,8 +118,12 @@ def generate_children_quantities(blend, qparent=None, quants=None, qmethod="abso
 def join_blends_quantities_to_samples(rblend, df_samples) -> pd.DataFrame:
     """
     Add the quantities of each sub-blend to the samples DataFrame.
+
+    WORK IN PROGRESS
     """
     base_components = get_base_components(rblend)
+    print(base_components)
+    return None
 
 
 def add_prop_to_samples(rblend, df_samples, prop_name) -> pd.DataFrame:
@@ -133,3 +137,53 @@ def add_prop_to_samples(rblend, df_samples, prop_name) -> pd.DataFrame:
     for comp in base_components:
         df_samples_prop[prop_name] += df_samples_prop[comp.name]*comp.props[prop_name]
     return df_samples_prop
+
+def _compute_euclidean_distance_matrix(p1, p2):
+    """Euclidean distance between two sets of points."""
+    np1, dim1 = p1.shape
+    np2, dim2 = p2.shape
+    dist = np.zeros((np1, np2))
+    for i in range(dim1):
+        diff2 = p1[:, i, None] - p2[:, i]
+        diff2 **= 2
+        dist += diff2
+    np.sqrt(dist, dist)
+    return dist
+
+
+def sort_samples_by_distance(
+        blend,
+        df_samples,
+        nsamples = 10, # Stop after this many samples, or it may be expensive to sort them all
+        preprocess=None # TODO: allow for some scaling preprocessing
+    ):
+    """Pick the first sample and then sort all the other by MaxMin distance from the previous one."""
+    from blends.base import get_base_components
+    import pandas as pd
+    from tqdm import tqdm 
+    base_components_names = [ comp.name for comp in get_base_components(blend) ]
+
+    points = df_samples[base_components_names].to_numpy()
+    points_array = np.asarray(points)
+
+    existing_points = [points[0]]
+    existing_points = np.atleast_2d(existing_points)
+
+    distances = _compute_euclidean_distance_matrix(existing_points, points_array)
+    aggregated_dist_criteria = distances.min(axis=0)
+    previous_index = np.argmax(aggregated_dist_criteria)
+    selected_indices = [previous_index]
+    mindistances = [np.nan]
+
+    for _ in tqdm(range(1, nsamples)):
+        previous_point = np.atleast_2d(points_array[previous_index])
+        distances = _compute_euclidean_distance_matrix(previous_point, points_array)
+        aggregated_dist_criteria = np.minimum(aggregated_dist_criteria, distances.ravel())
+        mindistances.append(np.max(aggregated_dist_criteria))
+        previous_index = np.argmax(aggregated_dist_criteria)
+        selected_indices.append(previous_index)
+
+    sorted_samples_array = np.take(points_array, selected_indices, axis=0)
+    df_samples_sorted = pd.DataFrame(sorted_samples_array, columns=base_components_names)
+    df_samples_sorted['MinDist'] = mindistances
+    return df_samples_sorted
