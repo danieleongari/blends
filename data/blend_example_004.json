@@ -1,0 +1,41 @@
+{
+    "name": "MyBlend#4",
+    "description": "Prompt: For MyBlend#4, first I would like to mix together a 12-30% of A1 with A2, then I would like to take 20-40% of the resulting blend and mix it with 10-60% of B, choosen from Bx or By. Finally, I would like to add the Solvent as the third component",
+    "qmin": 1.0,
+    "qmax": 1.0,
+    "children": [
+        {
+            "name": "A",
+            "qmin": 0.2,
+            "qmax": 0.4,
+            "children": [
+                {
+                    "name": "A1",
+                    "qmin": 0.12,
+                    "qmax": 0.3
+                },
+                {
+                    "name": "A2"
+                }
+            ]
+        },
+        {
+            "name": "B",
+            "qmin": 0.1,
+            "qmax": 0.6,
+            "cmax": 1,
+            "children": [
+                {
+                    "name": "Bx"
+                },
+                {
+                    "name": "By"
+                }
+            ]
+        },
+        {
+            "name": "Solvent",
+            "description": "fill the rest of the blend with the solvent"
+        }
+    ]
+}
