@@ -114,3 +114,15 @@ def generate_children_quantities(blend, qparent=None, quants=None, qmethod="abso
             del quants[child_name]
 
     return quants
+
+def add_prop_to_samples(rblend, df_samples, prop_name) -> pd.DataFrame:
+    """
+    Add the weighted sum of the properties of the components to the samples DataFrame:
+    this will be a new DataFrame with a column "{prop_name}" appended at the right.
+    """
+    base_components = get_base_components(rblend)
+    df_samples_prop = df_samples.copy()
+    df_samples_prop[prop_name] = 0
+    for comp in base_components:
+        df_samples_prop[prop_name] += df_samples_prop[comp.name]*comp.props[prop_name]
+    return df_samples_prop

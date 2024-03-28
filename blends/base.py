@@ -8,11 +8,12 @@ class Component:
     formulation in specified amounts.
     """
 
-    def __init__(self, name, description=None, qmin=0, qmax=1):
+    def __init__(self, name, description=None, qmin=0, qmax=1, props={}):
         self.name = name
         self.description = description
         self.qmin = qmin
         self.qmax = qmax
+        self.props = props
 
 class Blend:
     """Collection of Component or (sub-)Formulations.
@@ -60,7 +61,7 @@ def blend_to_dict(blend):
         blend_dict['children'] = children
         
         return blend_dict
-    else:
+    else: # blend is a Component
         return blend.__dict__
     
 
@@ -71,7 +72,24 @@ def get_base_components(blend):
             components += get_base_components(child)
         
         return components
-    else:
+    else: # blend is a Component
         return [blend]
     
 
+def add_prop_to_blend(blend, prop_name, prop_dict):
+    """Add a property to each Component in the Blend.
+    
+    blend: Blend or Component, root blend (unless used ricursively)
+    prop_name: str, name of the property to add
+    prop_dict: dict, dictionary with the property values for each Component, e.g., {"Comp-A1": 0.5, "Comp-A2": 0.3, ...}
+
+    NOTE: it is a good practice to append a description of the property to the root Blend description.
+    """
+    if isinstance(blend, Blend):
+        for child in blend.children:
+            add_prop_to_blend(child, prop_name, prop_dict)
+    else: # blend is a Component
+        try:
+            blend.props[prop_name] = prop_dict[blend.name] 
+        except KeyError:
+            raise KeyError(f"Component {blend.name} not found in the input prop_dict.")
