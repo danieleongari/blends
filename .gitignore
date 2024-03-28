@@ -10,5 +10,6 @@ cache/
 logs/
 
 poetry.lock
+pyproject.toml
 
 blends-gui/.env
