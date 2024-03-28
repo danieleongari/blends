@@ -1,6 +1,6 @@
 {
     "name": "myRootBlend",
-    "description": "An example of a Blend. Properties: price ($/kg).",
+    "description": "An example of a Blend. Properties: price ($/kg). Choose one of 3 available solvents with an amount between 20%-30%, mix them with an additional 40%-70% blend of 3 components, finally add another component in the amount of 10%-60%. The price of the solvents is 4.3, 3.5 and 2.7 respectively. The price of each component of the blend is 50, 30 and 20, respectively. The last component costs 10 ",
     "qmin": 1.0,
     "qmax": 1.0,
     "children": [
