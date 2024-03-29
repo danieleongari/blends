@@ -2,7 +2,7 @@
 
 A framework for an intuitive specification of the design space for blends of components.
 
-Started as a project for the [AC Bayesian Optimization Hackathon](https://github.com/AC-BO-Hackathon) in March 2024.
+Started as a project for the [AC Bayesian Optimization Hackathon](https://ac-bo-hackathon.github.io/projects/project-11-blends/) in March 2024.
 
 - [Poster](https://github.com/danieleongari/blends/blob/main/poster.pdf)
 - [Video presentation](https://youtu.be/HASa3tFLZoI)
