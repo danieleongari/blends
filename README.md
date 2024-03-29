@@ -4,8 +4,8 @@ A framework for an intuitive specification of the design space for blends of com
 
 Started as a project for the [AC Bayesian Optimization Hackathon](https://github.com/AC-BO-Hackathon) in March 2024.
 
-- poster
-- video
+- [Poster](https://github.com/danieleongari/blends/blob/main/poster.pdf)
+- [Video presentation](https://youtu.be/HASa3tFLZoI)
 
 ## Installation
 
